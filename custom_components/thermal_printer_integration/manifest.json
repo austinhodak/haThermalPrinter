@@ -2,7 +2,7 @@
   "domain": "thermal_printer",
   "name": "Thermal Printer",
   "config_flow": true,
-  "documentation": "https://github.com/yourusername/ha-thermal-printer",
+  "documentation": "https://github.com/austinhodak/haThermalPrinter",
   "requirements": ["python-escpos==3.1"],
   "ssdp": [],
   "zeroconf": [],
