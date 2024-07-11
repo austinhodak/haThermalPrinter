@@ -1,4 +1,6 @@
 """Config flow for Thermal Printer integration."""
+import logging
+
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
@@ -7,6 +9,8 @@ from homeassistant.exceptions import HomeAssistantError
 
 from . import ThermalPrinterDevice
 from .const import DOMAIN
+
+_LOGGER = logging.getLogger(__name__)
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
@@ -17,7 +21,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 
 async def validate_input(hass: HomeAssistant, data: dict) -> dict:
     """Validate the user input allows us to connect."""
-    printer = ThermalPrinterDevice(data["ip_address"])
+    printer = ThermalPrinterDevice(hass, data["ip_address"])
 
     if not await printer.update_status():
         raise CannotConnect
@@ -39,7 +43,7 @@ class ThermalPrinterConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except CannotConnect:
                 errors["base"] = "cannot_connect"
             except Exception:  # pylint: disable=broad-except
-                # _LOGGER.exception("Unexpected exception")
+                _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
                 return self.async_create_entry(title=info["title"], data=user_input)

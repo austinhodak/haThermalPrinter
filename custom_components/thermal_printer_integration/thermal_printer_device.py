@@ -13,12 +13,15 @@ class ThermalPrinterDevice:
         self.hass = hass
         self.ip_address = ip_address
         self.port = port
-        self.printer = Network(self.ip_address, self.port)
+        self.printer = Network(self.ip_address, self.port, profile='TM-T88V')
         self.is_online = False
         self.last_updated = None
 
     async def print_content(self, content):
         """Print content on the thermal printer."""
+        # Always check the printer status before attempting to print
+        await self.update_status()
+
         if not self.is_online:
             print("Printer is offline")
             return False
@@ -86,3 +89,8 @@ class ThermalPrinterDevice:
         """Check if the printer status should be updated."""
         return self.last_updated is None or \
             datetime.now() - self.last_updated > timedelta(minutes=5)
+
+    async def ensure_status_updated(self):
+        """Ensure the printer status is up-to-date."""
+        if self.should_update:
+            await self.update_status()
