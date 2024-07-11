@@ -1,0 +1,23 @@
+print:
+  name: Print
+  description: Print content on the thermal printer
+  fields:
+    content:
+      name: Content
+      description: The content to print (can be text or a predefined template name)
+      example: "Hello, World!"
+      selector:
+        text:
+          multiline: true
+    template:
+      name: Template
+      description: The name of the template to use (optional)
+      example: "kanban"
+      selector:
+        text:
+    data:
+      name: Template Data
+      description: Additional data for the template (optional)
+      example: '{"title": "New Task", "description": "Implement feature X"}'
+      selector:
+        object:
